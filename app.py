@@ -10,9 +10,6 @@ from langchain.chains import ConversationalRetrievalChain
 from pytube import YouTube
 from typing import TYPE_CHECKING, Any, Generator, List
 
-   
-
-#os.environ['OPENAI_API_KEY'] = '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'
 
 chat_history = []
 result = None
@@ -25,6 +22,8 @@ disable_box = gr.Textbox.update(value = 'OpenAI API key is Set',interactive=Fals
 remove_box = gr.Textbox.update(value = 'Your API key successfully removed', interactive=False)
 pause = gr.Button.update(interactive=False)
 resume = gr.Button.update(interactive=True)
+update_video = gr.Video.update(value = None)  
+update_yt = gr.HTML.update(value=None) 
 
 def set_apikey(api_key):
     os.environ['OPENAI_API_KEY'] = api_key
@@ -128,66 +127,6 @@ def process_text(video=None, url=None) -> tuple[list, list[dt.datetime]]:
         grouped_texts.append(current_group)
 
     return grouped_texts, time_list
-
-# def process_text(video=None, url=None) -> tuple[list, list[dt.datetime]]:
-#     # This function processes the text of a YouTube video or a local video file.
-
-#     # Check if a YouTube link or a local video file is provided.
-#     if not url and not video:
-#         # Raise an error if no input is provided.
-#         raise ValueError('Please provide a Youtube link or Upload a video')
-
-#     # Get the result of processing the video.
-#     global call_to_load_video
-#     if call_to_load_video == 0:
-#         print('yes')
-#         result = process_video(url=url) if url else process_video(video=video)
-#         call_to_load_video += 1
-
-#     # Get the text and start time of each segment of the video.
-#     texts, start_time_list = [], []
-#     for res in result['segments']:
-#         start = res['start']
-#         text = res['text']
-
-#         start_time = dt.datetime.fromtimestamp(start)
-#         start_time_formatted = start_time.strftime("%H:%M:%S")
-
-#         texts.append(''.join(text))
-#         start_time_list.append(start_time_formatted)
-
-#     # Convert the text and start time to a dictionary.
-#     texts_with_timestamps = dict(zip(texts, start_time_list))
-
-#     # Convert the dictionary to a list of tuples, where each tuple contains a text and its start time.
-#     formatted_texts = {
-#         text: dt.datetime.strptime(str(timestamp), '%H:%M:%S')
-#         for text, timestamp in texts_with_timestamps.items()
-#     }
-
-#     # Group the texts by their start time.
-#     grouped_texts = []
-#     current_group = ''
-#     time_list = [list(formatted_texts.values())[0]]
-#     previous_time = None
-#     time_difference = dt.timedelta(seconds=30)
-
-#     for text, timestamp in formatted_texts:
-
-#         if previous_time is None or timestamp - previous_time <= time_difference:
-#             current_group += text
-#         else:
-#             grouped_texts.append(current_group)
-#             time_list.append(timestamp)
-#             current_group = text
-#         previous_time = time_list[-1]
-
-#     # Append the last group of texts.
-#     if current_group:
-#         grouped_texts.append(current_group)
-
-#     # Return the list of groups of texts and the list of start times.
-#     return grouped_texts, time_list
 
 
 def get_title(url, video):
@@ -303,8 +242,6 @@ def embed_video(video=str | None):
     # Return the video and an empty list.
     return video, []
 
-update_video = gr.Video.update(value = None)  
-update_yt = gr.HTML.update(value=None) 
 
 with gr.Blocks() as demo:
     
