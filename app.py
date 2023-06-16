@@ -130,7 +130,6 @@ def process_text(video=None, url=None) -> tuple[list, list[dt.datetime]]:
 
 
 def get_title(url, video):
-    print(url, video)
     if url!=None:
         yt = YouTube(url)
         title = yt.title
